@@ -1,0 +1,5 @@
+.DS_Store
+.vscode
+.travis.yml
+x64/*
+x86/*
