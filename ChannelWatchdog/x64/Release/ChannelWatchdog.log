@@ -1,0 +1,7 @@
+﻿  channel_watchdog.cpp
+     Creating library C:\Users\Michael\source\repos\TeamSpeak Development\ChannelWatchdog\x64\Release\ChannelWatchdog.lib and object C:\Users\Michael\source\repos\TeamSpeak Development\ChannelWatchdog\x64\Release\ChannelWatchdog.exp
+  Generating code
+  Previous IOBJ not found, fall back to full compilation.
+C:\Users\Michael\source\repos\TeamSpeak Development\ChannelWatchdog\ChannelWatchdog\src\channel_watchdog.cpp(12): error C4716: 'ChannelWatchdog::Initialize': must return a value
+  All 221 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+LINK : fatal error LNK1257: code generation failed
