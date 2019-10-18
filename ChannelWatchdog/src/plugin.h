@@ -143,8 +143,12 @@ PLUGINS_EXPORTDLL const char* ts3plugin_keyDeviceName(const char* keyIdentifier)
 PLUGINS_EXPORTDLL const char* ts3plugin_displayKeyText(const char* keyIdentifier);
 PLUGINS_EXPORTDLL const char* ts3plugin_keyPrefix();
 
+char* plugin_id();
+TS3Functions* ts3handle();
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif
+

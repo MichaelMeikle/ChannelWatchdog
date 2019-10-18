@@ -9,12 +9,11 @@
 #include <Windows.h>
 #endif
 
-#include "common.h"
 #include "channel_watchdog.h"
-#include <memory>
+#include "common.h"
 
-static std::unique_ptr<ChannelWatchdog> plugin = std::make_unique<ChannelWatchdog>();
-
+static struct TS3Functions ts3Functions;
+static char* pluginID = NULL;
 
 #ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
@@ -150,7 +149,7 @@ void ts3plugin_currentServerConnectionChanged(uint64 serverConnectionHandlerID) 
 
 /* Static title shown in the left column in the info frame */
 const char* ts3plugin_infoTitle() {
-	return "";
+	return "Watchdog";
 }
 
 /*
@@ -160,37 +159,20 @@ const char* ts3plugin_infoTitle() {
  * "data" to NULL to have the client ignore the info data.
  */
 void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum PluginItemType type, char** data) {
-	char* name;
+	const char* output;
 
 	/* For demonstration purpose, display the name of the currently selected server, channel or client. */
 	switch(type) {
-		case PLUGIN_SERVER:
-			if(ts3Functions.getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_NAME, &name) != ERROR_ok) {
-				printf("Error getting virtual server name\n");
-				return;
-			}
-			break;
 		case PLUGIN_CHANNEL:
-			if(ts3Functions.getChannelVariableAsString(serverConnectionHandlerID, id, CHANNEL_NAME, &name) != ERROR_ok) {
-				printf("Error getting channel name\n");
-				return;
-			}
-			break;
-		case PLUGIN_CLIENT:
-			if(ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)id, CLIENT_NICKNAME, &name) != ERROR_ok) {
-				printf("Error getting client nickname\n");
-				return;
-			}
+			output = plugin->ChannelInfoData(serverConnectionHandlerID, id).c_str();
 			break;
 		default:
-			printf("Invalid item type: %d\n", type);
 			data = NULL;  /* Ignore */
 			return;
 	}
 
 	*data = (char*)malloc(INFODATA_BUFSIZE * sizeof(char));  /* Must be allocated in the plugin! */
-	snprintf(*data, INFODATA_BUFSIZE, "The nickname is [I]\"%s\"[/I]", name);  /* bbCode is supported. HTML is not supported */
-	ts3Functions.freeMemory(name);
+	snprintf(*data, INFODATA_BUFSIZE, output);  /* bbCode is supported. HTML is not supported */
 }
 
 /* Required to release the memory for parameter "data" allocated in ts3plugin_infoData and ts3plugin_initMenus */
@@ -247,10 +229,10 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	 */
 
 	BEGIN_CREATE_MENUS(4);  /* IMPORTANT: Number of menu items must be correct! */
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT,  CHANNEL_ENABLE,  "Monitor Channel",  "on.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT,  CHANNEL_DISABLE,  "Disable Monitor",  "off.png");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_ON, "On", "on.png");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_OFF, "Off", "off.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT,  CHANNEL_ENABLE,  "Monitor Channel",  "on.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT,  CHANNEL_DISABLE,  "Disable Monitor",  "off.png");
 	END_CREATE_MENUS;  /* Includes an assert checking if the number of menu items matched */
 
 	/*
@@ -295,13 +277,11 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 	/* Register hotkeys giving a keyword and a description.
 	 * The keyword will be later passed to ts3plugin_onHotkeyEvent to identify which hotkey was triggered.
 	 * The description is shown in the clients hotkey dialog. */
-	/*
-	BEGIN_CREATE_HOTKEYS(3); 
-	CREATE_HOTKEY("keyword_1", "Test hotkey 1");
-	CREATE_HOTKEY("keyword_2", "Test hotkey 2");
-	CREATE_HOTKEY("keyword_3", "Test hotkey 3");
+	
+	BEGIN_CREATE_HOTKEYS(0); 
+	//CREATE_HOTKEY("keyword_1", "Test hotkey 1");
 	END_CREATE_HOTKEYS;
-	*/
+	
 	/* The client will call ts3plugin_freeMemory to release all allocated memory */
 }
 
@@ -635,4 +615,13 @@ const char* ts3plugin_keyPrefix() {
 
 /* Called when client custom nickname changed */
 void ts3plugin_onClientDisplayNameChanged(uint64 serverConnectionHandlerID, anyID clientID, const char* displayName, const char* uniqueClientIdentifier) {
+}
+
+char* plugin_id()
+{
+	return pluginID;
+}
+TS3Functions* ts3handle()
+{
+	return &ts3Functions;
 }

@@ -21,10 +21,10 @@
     <ClCompile Include="src\channel_watchdog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\plugin.cpp">
+    <ClCompile Include="src\channel_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\channel_list.cpp">
+    <ClCompile Include="src\plugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,10 +38,10 @@
     <ClInclude Include="src\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\channel_watchdog.h">
+    <ClInclude Include="src\channel_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\channel_list.h">
+    <ClInclude Include="src\channel_watchdog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

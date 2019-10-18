@@ -11,8 +11,6 @@
 #include "ts3_functions.h"
 #include "plugin.h"
 
-static struct TS3Functions ts3Functions;
-static char* pluginID = NULL;
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
