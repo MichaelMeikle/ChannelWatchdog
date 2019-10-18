@@ -2,5 +2,13 @@
 .vscode
 .travis.yml
 .vs
-x64/*
-x86/*
+x64/
+x86/
+x64
+x86
+**/x64
+**/x86
+.x64
+.x86
+ChannelWatchdog/x86/*
+ChannelWatchdog/x64/*
