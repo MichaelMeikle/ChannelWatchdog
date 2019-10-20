@@ -14,6 +14,7 @@
 
 static struct TS3Functions ts3Functions;
 static char* pluginID = NULL;
+static char plugin_path[PATH_BUFSIZE];
 
 #ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
@@ -79,6 +80,7 @@ void ts3plugin_setFunctionPointers(const struct TS3Functions funcs) {
  * If the function returns 1 on failure, the plugin will be unloaded again.
  */
 int ts3plugin_init() {
+	//ts3Functions.getPluginPath(plugin_path, PATH_BUFSIZE, pluginID);
 	plugin->Initialize();
 	return 0;
 }
@@ -228,19 +230,21 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	 * e.g. for "test_plugin.dll", icon "1.png" is loaded from <TeamSpeak 3 Client install dir>\plugins\test_plugin\1.png
 	 */
 
-	BEGIN_CREATE_MENUS(4);  /* IMPORTANT: Number of menu items must be correct! */
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_ON, "On", "on.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_OFF, "Off", "off.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT,  CHANNEL_ENABLE,  "Monitor Channel",  "on.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT,  CHANNEL_DISABLE,  "Disable Monitor",  "off.png");
+	BEGIN_CREATE_MENUS(5);  /* IMPORTANT: Number of menu items must be correct! */
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_ON, "On", "icons/on.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_OFF, "Off", "icons/off.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, 12, "Write", "icons/alert.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL,  CHANNEL_ENABLE,  "Monitor Channel",  "icons/on.png");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL,  CHANNEL_DISABLE,  "Disable Monitor",  "icons/off.png");
 	END_CREATE_MENUS;  /* Includes an assert checking if the number of menu items matched */
+	ts3Functions.setPluginMenuEnabled(pluginID, GLOBAL_NOTIFICATION_ON, 0);
 
 	/*
 	 * Specify an optional icon for the plugin. This icon is used for the plugins submenu within context and main menus
 	 * If unused, set menuIcon to NULL
 	 */
 	*menuIcon = (char*)malloc(PLUGIN_MENU_BUFSZ * sizeof(char));
-	_strcpy(*menuIcon, PLUGIN_MENU_BUFSZ, "alert.png");
+	_strcpy(*menuIcon, PLUGIN_MENU_BUFSZ, "icons/alert.png");
 
 	/*
 	 * Menus can be enabled or disabled with: ts3Functions.setPluginMenuEnabled(pluginID, menuID, 0|1);
@@ -624,4 +628,8 @@ char* plugin_id()
 TS3Functions* ts3handle()
 {
 	return &ts3Functions;
+}
+char* get_path()
+{
+	return	plugin_path;
 }

@@ -145,7 +145,7 @@ PLUGINS_EXPORTDLL const char* ts3plugin_keyPrefix();
 
 char* plugin_id();
 TS3Functions* ts3handle();
-
+char* get_path();
 #ifdef __cplusplus
 }
 #endif

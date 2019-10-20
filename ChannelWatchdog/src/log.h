@@ -2,7 +2,7 @@
 #include "common.h"
 #include <thread>
 #include <string>
-
+#define LOG_NAME "Watchdog"
 class Log
 {
 	int log_level_;
@@ -16,7 +16,7 @@ public:
 	void Warning(std::string msg);
 	void Error(std::string msg);
 	/* Prints msg to TeamSpeak server chat */
-	void PrintMsg(std::string msg);
+	void PrintMsg(uint64 serverConnectionHandlerID, std::string msg);
 
 	/*** Getters ***/
 	int log_level();

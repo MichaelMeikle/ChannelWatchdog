@@ -45,15 +45,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="src\icons\alert.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="src\icons\off.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="src\icons\on.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
 </Project>
