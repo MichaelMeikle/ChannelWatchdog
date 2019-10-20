@@ -9,9 +9,6 @@ ChannelList::ChannelList()
 	list_updated_ = false;
 	log = std::make_unique<Log>();
 }
-ChannelList::~ChannelList()
-{
-}
 
 bool ChannelList::SearchItem(std::string UID, uint64 channel_id)
 {

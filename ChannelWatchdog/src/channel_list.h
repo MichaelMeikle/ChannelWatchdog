@@ -13,7 +13,6 @@ class ChannelList
 
 public:
 	ChannelList();
-	~ChannelList();
 	/* Called when change channel event is registered, checks for server uid list, then checks to see if the list contains the channel_id */
 	bool SearchItem(std::string UID, uint64 channel_id);
 	/* Adds item to list if not already added (Returns 0 for success, -1 for failure, 1 for already exists in list) */
