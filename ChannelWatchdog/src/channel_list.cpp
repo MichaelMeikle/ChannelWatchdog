@@ -12,14 +12,6 @@ ChannelList::ChannelList()
 ChannelList::~ChannelList()
 {
 }
-/*
-void ChannelList::Shutdown()
-{
-	printf("Writing file...\n");
-	WriteList();
-	printf("Write complete\n");
-}
-*/
 
 bool ChannelList::SearchItem(std::string UID, uint64 channel_id)
 {
