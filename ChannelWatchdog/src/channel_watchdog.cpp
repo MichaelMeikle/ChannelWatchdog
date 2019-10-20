@@ -59,6 +59,9 @@ void ChannelWatchdog::ChangeChannelEvent(uint64 serverConnectionHandlerID, anyID
 	anyID own_id;
 	ts3handle()->getClientID(serverConnectionHandlerID, &own_id);
 
+	if (own_id == clientID)
+		return;
+
 	if (list->SearchItem(server_unique_id, newChannelID))
 	{
 		console->Debug("Switch to monitored channel detected " + server_unique_id);
