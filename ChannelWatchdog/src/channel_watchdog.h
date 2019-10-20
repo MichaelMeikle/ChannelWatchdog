@@ -37,6 +37,7 @@ public:
 
 private:
 	std::string Get_Alert_Msg(uint64 server_id, anyID client_id, uint64 ch_id);
+	std::string Get_Poke_Msg(uint64 server_id, anyID client_id, uint64 ch_id);
 };
 
 static std::unique_ptr<ChannelWatchdog> plugin = std::make_unique<ChannelWatchdog>();

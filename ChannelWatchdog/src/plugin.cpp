@@ -14,7 +14,6 @@
 
 static struct TS3Functions ts3Functions;
 static char* pluginID = NULL;
-static char plugin_path[PATH_BUFSIZE];
 
 #ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
@@ -230,10 +229,9 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	 * e.g. for "test_plugin.dll", icon "1.png" is loaded from <TeamSpeak 3 Client install dir>\plugins\test_plugin\1.png
 	 */
 
-	BEGIN_CREATE_MENUS(5);  /* IMPORTANT: Number of menu items must be correct! */
+	BEGIN_CREATE_MENUS(4);  /* IMPORTANT: Number of menu items must be correct! */
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_ON, "On", "icons/on.png");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, GLOBAL_NOTIFICATION_OFF, "Off", "icons/off.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, 12, "Write", "icons/alert.png");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL,  CHANNEL_ENABLE,  "Monitor Channel",  "icons/on.png");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL,  CHANNEL_DISABLE,  "Disable Monitor",  "icons/off.png");
 	END_CREATE_MENUS;  /* Includes an assert checking if the number of menu items matched */
@@ -332,6 +330,7 @@ void ts3plugin_onClientMoveTimeoutEvent(uint64 serverConnectionHandlerID, anyID 
 }
 
 void ts3plugin_onClientMoveMovedEvent(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID, int visibility, anyID moverID, const char* moverName, const char* moverUniqueIdentifier, const char* moveMessage) {
+	plugin->ChangeChannelEvent(serverConnectionHandlerID, clientID, oldChannelID, newChannelID, visibility, moveMessage);
 }
 
 void ts3plugin_onClientKickFromChannelEvent(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID, int visibility, anyID kickerID, const char* kickerName, const char* kickerUniqueIdentifier, const char* kickMessage) {
@@ -631,5 +630,7 @@ TS3Functions* ts3handle()
 }
 char* get_path()
 {
+	char plugin_path[PATH_BUFSIZE];
+	ts3Functions.getPluginPath(plugin_path, PATH_BUFSIZE, plugin_id());
 	return	plugin_path;
 }

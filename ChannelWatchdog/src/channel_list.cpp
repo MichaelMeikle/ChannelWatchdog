@@ -12,12 +12,15 @@ ChannelList::ChannelList()
 ChannelList::~ChannelList()
 {
 }
+/*
 void ChannelList::Shutdown()
 {
 	printf("Writing file...\n");
 	WriteList();
 	printf("Write complete\n");
 }
+*/
+
 bool ChannelList::SearchItem(std::string UID, uint64 channel_id)
 {
 	if (active_server_.compare(UID) != 0)
@@ -26,14 +29,6 @@ bool ChannelList::SearchItem(std::string UID, uint64 channel_id)
 
 	return InActiveList(channel_id);
 }
-#ifdef _WIN32
-#include <windows.h>
-#define SYSERROR()  GetLastError()
-#else
-#include <errno.h>
-#define SYSERROR()  errno
-#endif
-
 bool ChannelList::LoadList(std::string UID)
 {
 	QLog t("Loading " + UID + " list...", "LoadList");
@@ -44,7 +39,7 @@ bool ChannelList::LoadList(std::string UID)
 
 	std::fstream file;
 	std::string line;
-	file.open(active_server_ + ".txt");
+	file.open(std::string(get_path()) + "channel_watchdog/" + active_server_ + ".txt");
 	if (file.is_open())
 	{
 		while (std::getline(file, line))
@@ -61,18 +56,6 @@ bool ChannelList::LoadList(std::string UID)
 		}
 		file.close();
 	}
-	else
-	{
-		//std::string(get_path()) + 
-		log->Debug("No file found or opened, creating new file for server UID");
-		std::ofstream outfile(UID + ".txt");
-		if (!file.is_open())
-		{
-			log->Error("New file failed to be created for " + UID + "...");
-			std::cerr << "Failed to open file : " << SYSERROR() << std::endl;
-		}
-		outfile.close();
-	}
 	return true;
 }
 
@@ -87,6 +70,8 @@ void ChannelList::WriteList()
 	{
 		for (uint64 ch_id : notify_channel_list_)
 		{
+			if (notify_channel_list_.empty())
+				break;
 			printf("Pushing CH_ID: %i\n", (int)ch_id);
 			file << ch_id << std::endl;
 
@@ -114,6 +99,7 @@ int ChannelList::AddItem(std::string UID, uint64 channel_id)
 			return 1;
 	}
 	notify_channel_list_.push_back(channel_id);
+	WriteList();
 	return 0;
 }
 /* Removes item from list if it exists (Returns 0 for success, -1 for failure) */
@@ -129,6 +115,7 @@ int ChannelList::RemoveItem(std::string UID, uint64 channel_id)
 		LoadList(UID);
 
 	notify_channel_list_.remove(channel_id);
+	WriteList();
 	return 0;
 }
 

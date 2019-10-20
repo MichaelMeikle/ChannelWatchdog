@@ -17,7 +17,7 @@ public:
 	void Error(std::string msg);
 	/* Prints msg to TeamSpeak server chat */
 	void PrintMsg(uint64 serverConnectionHandlerID, std::string msg);
-
+	void SelfMsg(uint64 serverConnectionHandlerID, std::string msg, anyID clientID);
 	/*** Getters ***/
 	int log_level();
 	/*** Setters ***/

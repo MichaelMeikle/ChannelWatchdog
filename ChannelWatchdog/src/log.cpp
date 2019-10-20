@@ -43,3 +43,7 @@ void Log::PrintMsg(uint64 serverConnectionHandlerID, std::string msg)
 {
 	ts3handle()->printMessage(serverConnectionHandlerID, msg.c_str(), PLUGIN_MESSAGE_TARGET_CHANNEL);
 }
+void Log::SelfMsg(uint64 serverConnectionHandlerID, std::string msg, anyID clientID)
+{
+	ts3handle()->requestSendPrivateTextMsg(serverConnectionHandlerID, msg.c_str(), clientID, NULL);
+}
