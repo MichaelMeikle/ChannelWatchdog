@@ -20,8 +20,8 @@ public:
 	int AddItem(std::string UID, uint64 channel_id);
 	/* Removes item from list if it exists (Returns 0 for success, -1 for failure) */
 	int RemoveItem(std::string UID, uint64 channel_id);
-	void WriteList();
 private:
+	void WriteList();
 	bool InActiveList(uint64 channel_id);
 	bool LoadList(std::string UID);
 };
