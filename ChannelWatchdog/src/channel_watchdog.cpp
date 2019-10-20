@@ -56,7 +56,7 @@ void ChannelWatchdog::ChangeChannelEvent(uint64 serverConnectionHandlerID, anyID
 	std::string server_unique_id(result);
 	delete result;
 
-	anyID own_id;
+	anyID own_id = NULL;
 	ts3handle()->getClientID(serverConnectionHandlerID, &own_id);
 
 	if (own_id == clientID)
@@ -123,19 +123,19 @@ std::string ChannelWatchdog::Get_Alert_Msg(uint64 server_id, anyID client_id, ui
 	if (CheckError(ts3handle()->getClientDisplayName(server_id, client_id, name, 64)))
 		client_name = name;
 	else
-		client_name = "Error";
+		client_name = "Hidden";
 
 	char* result;
 	if (CheckError(ts3handle()->getChannelVariableAsString(server_id, ch_id, CHANNEL_NAME, &result)))
 		channel_name = result;
 	else
-		channel_name = "Error";
+		channel_name = "Hidden";
 	delete result;
 
 	if (CheckError(ts3handle()->getClientVariableAsString(server_id, client_id, CLIENT_UNIQUE_IDENTIFIER, &result)))
 		client_unique = result;
 	else
-		client_unique = "Error";
+		client_unique = "Hidden";
 	delete result;
 
 	uint64 p_chid;
@@ -145,7 +145,7 @@ std::string ChannelWatchdog::Get_Alert_Msg(uint64 server_id, anyID client_id, ui
 			parent_name = result;
 	}
 	if (parent_name.empty())
-		parent_name = "Error";
+		parent_name = "Hidden";
 	delete result;
 
 	auto current = std::chrono::system_clock::now();
