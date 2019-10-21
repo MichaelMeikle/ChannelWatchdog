@@ -154,6 +154,7 @@
     <ClCompile Include="src\channel_watchdog.cpp" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\plugin.cpp" />
+    <ClCompile Include="src\user_list.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\channel_list.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\log.h" />
     <ClInclude Include="src\plugin.h" />
+    <ClInclude Include="src\user_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

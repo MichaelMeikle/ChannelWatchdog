@@ -124,6 +124,7 @@ std::string ChannelWatchdog::Get_Alert_Msg(uint64 server_id, anyID client_id, ui
 		client_name = name;
 	else
 		client_name = "Hidden";
+	delete name;
 
 	char* result;
 	if (CheckError(ts3handle()->getChannelVariableAsString(server_id, ch_id, CHANNEL_NAME, &result)))
@@ -166,12 +167,14 @@ std::string ChannelWatchdog::Get_Poke_Msg(uint64 server_id, anyID client_id, uin
 	if (CheckError(ts3handle()->getClientDisplayName(server_id, client_id, name, 64)))
 		client_name = name;
 	else
-		client_name = "Error";
+		client_name = "Hidden";
+	delete name;
+
 	char* result;
 	if (CheckError(ts3handle()->getChannelVariableAsString(server_id, ch_id, CHANNEL_NAME, &result)))
 		channel_name = result;
 	else
-		channel_name = "Error";
+		channel_name = "Hidden";
 	delete result;
 
 	return client_name + " joined " + channel_name;
