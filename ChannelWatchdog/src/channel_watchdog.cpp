@@ -26,7 +26,7 @@ std::string ChannelWatchdog::ChannelInfoData(uint64 serverConnectionHandlerID, u
 	char* result;
 	if (!CheckError(ts3handle()->getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_UNIQUE_IDENTIFIER, &result)))
 		return "";
-	std::string server_unique_id(result);
+	std::string server_unique_id(Sanitize_UID(result));
 	std::string status = "Watch Status: ";
 
 	if (list->SearchItem(server_unique_id, itemID))
@@ -53,7 +53,7 @@ void ChannelWatchdog::ChangeChannelEvent(uint64 serverConnectionHandlerID, anyID
 	char* result;
 	if (!CheckError(ts3handle()->getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_UNIQUE_IDENTIFIER, &result)))
 		return;
-	std::string server_unique_id(result);
+	std::string server_unique_id(Sanitize_UID(result));
 	delete result;
 
 	anyID own_id = NULL;
@@ -77,7 +77,7 @@ void ChannelWatchdog::MenuEvent(uint64 serverConnectionHandlerID, enum PluginMen
 	char* result;
 	if (!CheckError(ts3handle()->getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_UNIQUE_IDENTIFIER, &result)))
 		return;
-
+	std::string sanitized(Sanitize_UID(result));
 	switch (menuItemID)
 	{
 		case GLOBAL_NOTIFICATION_ON:
@@ -91,12 +91,12 @@ void ChannelWatchdog::MenuEvent(uint64 serverConnectionHandlerID, enum PluginMen
 			ShowMenuItem(GLOBAL_NOTIFICATION_ON);
 			break;
 		case CHANNEL_ENABLE:
-			list->AddItem(result, selectedItemID);
+			list->AddItem(sanitized, selectedItemID);
 			ShowMenuItem(CHANNEL_DISABLE);
 			HideMenuItem(CHANNEL_ENABLE);
 			break;
 		case CHANNEL_DISABLE:
-			list->RemoveItem(result, selectedItemID);
+			list->RemoveItem(sanitized, selectedItemID);
 			HideMenuItem(CHANNEL_DISABLE);
 			ShowMenuItem(CHANNEL_ENABLE);
 			break;
@@ -175,6 +175,23 @@ std::string ChannelWatchdog::Get_Poke_Msg(uint64 server_id, anyID client_id, uin
 	delete result;
 
 	return client_name + " joined " + channel_name;
+}
+
+std::string ChannelWatchdog::Sanitize_UID(std::string UID)
+{
+	std::string sanitized;
+	for (size_t i = 0; i < UID.size(); i++)
+	{
+		bool valid = true;
+		for (char x : banned_list)
+		{
+			if (UID[i] == x)
+				valid = false;
+		}
+		if (valid)
+			sanitized += UID[i];
+	}
+	return sanitized;
 }
 
 /*** Getters ***/

@@ -38,6 +38,9 @@ public:
 private:
 	std::string Get_Alert_Msg(uint64 server_id, anyID client_id, uint64 ch_id);
 	std::string Get_Poke_Msg(uint64 server_id, anyID client_id, uint64 ch_id);
+	std::string Sanitize_UID(std::string UID);
 };
 
 static std::unique_ptr<ChannelWatchdog> plugin = std::make_unique<ChannelWatchdog>();
+
+static char banned_list[9] = { (char) 2567200, '/', ':', '*', '?', '<', '>', '"', '|'};
