@@ -121,33 +121,41 @@ std::string ChannelWatchdog::Get_Alert_Msg(uint64 server_id, anyID client_id, ui
 	char name[64];
 	std::string client_name, channel_name, client_unique, parent_name;
 	if (CheckError(ts3handle()->getClientDisplayName(server_id, client_id, name, 64)))
-		client_name = name;
+	{
+		client_name = std::string(name);
+		delete name;
+	}
 	else
-		client_name = "Hidden";
-	delete name;
+		client_name = "[Hidden]";
 
 	char* result;
 	if (CheckError(ts3handle()->getChannelVariableAsString(server_id, ch_id, CHANNEL_NAME, &result)))
-		channel_name = result;
+	{
+		channel_name = std::string(result);
+		delete result;
+	}
 	else
-		channel_name = "Hidden";
-	delete result;
+		channel_name = "[Hidden]";
 
 	if (CheckError(ts3handle()->getClientVariableAsString(server_id, client_id, CLIENT_UNIQUE_IDENTIFIER, &result)))
-		client_unique = result;
+	{
+		client_unique = std::string(result);
+		delete result;
+	}
 	else
-		client_unique = "Hidden";
-	delete result;
+		client_unique = "[Hidden]";
 
 	uint64 p_chid;
 	if (CheckError(ts3handle()->getParentChannelOfChannel(server_id, ch_id, &p_chid)))
 	{
 		if (CheckError(ts3handle()->getChannelVariableAsString(server_id, p_chid, CHANNEL_NAME, &result)))
-			parent_name = result;
+		{
+			parent_name = std::string(result);
+			delete result;
+		}
 	}
 	if (parent_name.empty())
-		parent_name = "Hidden";
-	delete result;
+		parent_name = "[Hidden]";
 
 	auto current = std::chrono::system_clock::now();
 	std::time_t currentTime = std::chrono::system_clock::to_time_t(current);
@@ -165,17 +173,21 @@ std::string ChannelWatchdog::Get_Poke_Msg(uint64 server_id, anyID client_id, uin
 	char name[64];
 	std::string client_name, channel_name;
 	if (CheckError(ts3handle()->getClientDisplayName(server_id, client_id, name, 64)))
-		client_name = name;
+	{
+		client_name = std::string(name);
+		delete name;
+	}
 	else
-		client_name = "Hidden";
-	delete name;
+		client_name = "[Hidden]";
 
 	char* result;
 	if (CheckError(ts3handle()->getChannelVariableAsString(server_id, ch_id, CHANNEL_NAME, &result)))
-		channel_name = result;
+	{
+		channel_name = std::string(result);
+		delete result;
+	}
 	else
-		channel_name = "Hidden";
-	delete result;
+		channel_name = "[Hidden]";
 
 	return client_name + " joined " + channel_name;
 }
